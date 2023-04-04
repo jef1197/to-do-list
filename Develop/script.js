@@ -1,18 +1,9 @@
-// Wrap all code that interacts with the DOM in a call to jQuery to ensure that
-// the code isn't run until the browser has finished rendering all the elements
-// in the html.
 var currentDayEl = $('#currentDay');
 var taskDisplayEl = $('.time-block');
 
 $(function () {
-  // TODO: Add a listener for click events on the save button. This code should
-  // use the id in the containing time-block as a key to save the user input in
-  // local storage. HINT: What does `this` reference in the click listener
-  // function? How can DOM traversal be used to get the "hour-x" id of the
-  // time-block containing the button that was clicked? How might the id be
-  // useful when saving the description in local storage?
+  // Function to save the task to local storage once user has clicked on the save button
   function saveTask () { 
-    console.log($(this).siblings('.description').val());
     var newTask = {
       hour: $(this).parent().attr('id'),
       task: $(this).siblings('.description').val()
@@ -21,63 +12,65 @@ $(function () {
     tasks.push(newTask);
     setTask(tasks);
   }
-  // TODO: Add code to apply the past, present, or future class to each time
-  // block by comparing the id to the current hour. HINTS: How can the id
-  // attribute of each time-block be used to conditionally add or remove the
-  // past, present, and future classes? How can Day.js be used to get the
-  // current hour in 24-hour time?
-    function checkCurrentTime() {
-      var time = dayjs().format('H');
-      // var time = 15; // for testing purposes
-      taskDisplayEl.each(function () { 
-        if (time > $(this).data('hour')) {
-          $(this).addClass('past')
-        } else if (time == $(this).data('hour')) {
-          $(this).addClass('present')
-        } else {
-          $(this).addClass('future')
-        }
-      });
-    }
 
-  // TODO: Add code to get any user input that was saved in localStorage and set
-  // the values of the corresponding textarea elements. HINT: How can the id
-  // attribute of each time-block be used to do this?
-    function getTask() {
-      var tasks = localStorage.getItem('tasks');
-      if(tasks) {
-        tasks = JSON.parse(tasks);
+  // Checks the current time and applies a class to the time blocks depending on its relation to the current time
+  function checkCurrentTime() {
+    var time = dayjs().format('H');
+    // var time = 15; // for testing purposes
+    taskDisplayEl.each(function () { 
+      if (time > $(this).data('hour')) {
+        $(this).addClass('past')
+      } else if (time == $(this).data('hour')) {
+        $(this).addClass('present')
       } else {
-        tasks = [];
+        $(this).addClass('future')
       }
-      return tasks;
-    }
+    });
+  }
 
-    function setTask(tasks) {
-      localStorage.setItem('tasks', JSON.stringify(tasks));
+  // Gets the current local storage to the task
+  function getTask() {
+    var tasks = localStorage.getItem('tasks');
+    if(tasks) {
+      tasks = JSON.parse(tasks);
+    } else {
+      tasks = [];
     }
+    return tasks;
+  }
 
-    function renderTask() { 
-      taskDisplayEl.children('.description').empty();
-      var tasks = getTask();
-      for(var i = 0; i < tasks.length; i++) {
-        var task = tasks[i];
-        var currentHour = $('#' + task.hour)
-        currentHour.children('.description').text(task.task);
-      }
+  // Sets the new task to the local storage
+  function setTask(tasks) {
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+  }
+
+  // Renders the task in the storage to the webpage
+  function renderTask() { 
+    taskDisplayEl.children('.description').empty();
+    var tasks = getTask();
+    for(var i = 0; i < tasks.length; i++) {
+      var task = tasks[i];
+      var currentHour = $('#' + task.hour)
+      currentHour.children('.description').text(task.task);
     }
+  }
 
-  // TODO: Add code to display the current date in the header of the page.
+  // Displays the current day and time to the webpage
   function displayTime() {
     var time = dayjs().format('MMM DD, YYYY [,] hh:mm:ss A');
     currentDayEl.text(time);
   }
 
+  // Keeps updating the current time to the webpage
   displayTime();
   setInterval(displayTime, 1000);
+
+  // Renders task to the page and applies the correct classes
   renderTask();
-  taskDisplayEl.on('click','.saveBtn', saveTask);
   checkCurrentTime();
+  // Event listener for all save buttons
+  taskDisplayEl.on('click','.saveBtn', saveTask);
+  
 });
 
 
