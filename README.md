@@ -5,7 +5,7 @@
 This is the Module 5 Challenge for the boot camp. The code was made from scratch to allow the user to be able to create a daily schedule planner. It will allow the user to create or update task according to the time block they have selected. They are also able to save each task and be able to refresh the page without the task disappearing. Finally, the time blocks are color coded so the user can clearly tell which task that have already been passed, which task we are currently in, and which task are coming up.
 
 
-Link to Deployment: https://github.com/jef1197/to-do-list
+Link to Deployment: https://jef1197.github.io/to-do-list/
 
 ![screen shot of website](./Assets/images/website.png)
 
